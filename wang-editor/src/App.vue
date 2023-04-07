@@ -1,7 +1,11 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <BasicEditor></BasicEditor>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import BasicEditor from "./components/basic-editor.vue";
+</script>
 
 <style></style>
