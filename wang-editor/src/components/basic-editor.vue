@@ -12,6 +12,12 @@
       :defaultConfig="editorConfig"
       :mode="mode"
       @onCreated="handleCreated"
+      @onChange="handleChange"
+      @onDestroyed="handleDestroyed"
+      @onFocus="handleFocus"
+      @onBlur="handleBlur"
+      @customAlert="customAlert"
+      @customPaste="customPaste"
     />
   </div>
 </template>
@@ -49,8 +55,52 @@ export default {
       editor.destroy();
     });
 
+    // 编辑回调函数
     const handleCreated = (editor) => {
       editorRef.value = editor; // 记录 editor 实例，重要！
+    };
+    const handleChange = (editor) => {
+      console.log("change:", editor.getHtml());
+    };
+    const handleDestroyed = (editor) => {
+      console.log("destroyed", editor);
+    };
+    const handleFocus = (editor) => {
+      console.log("focus", editor);
+    };
+    const handleBlur = (editor) => {
+      console.log("blur", editor);
+    };
+    const customAlert = (info, type) => {
+      alert(`【自定义提示】${type} - ${info}`);
+    };
+    const customPaste = (editor, event, callback) => {
+      console.log("ClipboardEvent 粘贴事件对象", event);
+
+      // 自定义插入内容
+      editor.insertText("xxx");
+
+      // 返回值（注意，vue 事件的返回值，不能用 return）
+      callback(false); // 返回 false ，阻止默认粘贴行为
+      // callback(true) // 返回 true ，继续默认的粘贴行为
+    };
+
+    const insertText = () => {
+      const editor = editorRef.value;
+      if (editor == null) return;
+      editor.insertText("hello world");
+    };
+
+    const printHtml = () => {
+      const editor = editorRef.value;
+      if (editor == null) return;
+      console.log(editor.getHtml());
+    };
+
+    const disable = () => {
+      const editor = editorRef.value;
+      if (editor == null) return;
+      editor.disable();
     };
 
     return {
@@ -60,6 +110,15 @@ export default {
       toolbarConfig,
       editorConfig,
       handleCreated,
+      handleChange,
+      handleDestroyed,
+      handleFocus,
+      handleBlur,
+      customAlert,
+      customPaste,
+      insertText,
+      printHtml,
+      disable,
     };
   },
 };
